@@ -255,7 +255,7 @@ def board_game():
 
 
 
-#board_game()
+board_game()
 
 
 #play_card_ju()

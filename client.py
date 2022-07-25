@@ -25,7 +25,8 @@ def ready(client):
 
 def main():
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    IP, port = target_server()
+    #IP, port = target_server()
+    IP, port = '127.0.0.1', 80
     client.connect((IP, port))
     gamename = input("Enter a Game Name ")
 
