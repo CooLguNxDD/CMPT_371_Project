@@ -19,7 +19,7 @@ def target_server():
 
 # send ready to server
 def ready(client):
-    ready_msg = str(input("Input \"ready\" if you are ready"))
+    ready_msg = str(input("Input \"ready\" if you are ready \n"))
     if ready_msg == "ready":
         try:
             client.send(ready_msg.encode())
