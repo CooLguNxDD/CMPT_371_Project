@@ -1,10 +1,6 @@
 import random
 from secrets import choice
 
-
-
-
-
 #Build deck function. Creates a list of cards
 """
 def buildDeck():
@@ -225,11 +221,10 @@ def play_multi_card_ju(player_a, player_b):
             players[player_b][player_b_choice] = card_swap_2
 
 def board_game():
-
     board_size = 10
     player_positions = [0]*numPlayers
     game_on = 1
-    while game_on ==1:
+    while game_on == 1:
         for i in range(len(player_positions)):
             print("It is now player", i, "'s turn to roll")
             roll = input("Press Any button to roll a die")
@@ -260,7 +255,7 @@ def board_game():
 
 
 
-board_game()
+#board_game()
 
 
 #play_card_ju()
