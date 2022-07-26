@@ -145,7 +145,7 @@ def play_card_ju():
 
 
 def play_multi_card_ju(player_a, player_b):
-   
+    print("player check: ", player_a, player_b)
     game_on = 1
     player_a_score = 0;
     player_b_score = 0;
