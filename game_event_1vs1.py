@@ -11,11 +11,15 @@ import time
 class game_event_1vs1:
     def __init__(self, player1, player2):
         # board
-        self.board = board_server()
+        #self.board = board_server()
 
         # players
         self.player_1 = player1
         self.player_2 = player2
+
+        ## if goes back to zero
+        self.player_1.score = 0 
+        self.player_2.score = 0
 
         self.card_num = 5
 
@@ -25,11 +29,32 @@ class game_event_1vs1:
         # lock
         self.lock = threading.Lock()
 
+        self.full_deck = self.buildDeck()
+
+        random.shuffle(self.full_deck)
+
+    def buildDeck(self):
+        deck = []
+        # example card: Red 7, Green 8, Blue skip
+        colours = ["Fire", "Water", "Snow"]
+        values = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        for colour in colours:
+            for value in values:
+                deck.insert(-1, [colour, value])
+        # print(deck)
+        return deck
+
+    def drawCards(self, numCards):
+        cardsDrawn = []
+        for x in range(numCards):
+            cardsDrawn.append(self.full_deck.pop(0))
+        return cardsDrawn
+
     # draw cards
     def player_draw_card(self, player, draw_num):
         # draw card
         temp_card = player.hand
-        draw_cards = self.board.drawCards(draw_num)
+        draw_cards = self.drawCards(draw_num)
 
         for card in draw_cards:
             temp_card.append(card)
@@ -99,7 +124,7 @@ class game_event_1vs1:
             print(e)
         return
 
-
+    
     def win_condition(self):
         # counter list
         condition_dict = {'Fire': 'Snow', 'Snow': 'Water', 'Water': 'Fire'}
@@ -133,11 +158,16 @@ class game_event_1vs1:
                 self.player_2.score += 1
                 self.broadcast(f"--------{self.player_2.game_name} win--------")
                 self.broadcast(" ")
+    
+
+    
+
+
 
     def start_game(self):
         print("starting game")
-        self.play_multi_card_ju()
-        return
+        ret = self.play_multi_card_ju()
+        return ret
 
     def play_multi_card_ju(self):
 
@@ -167,10 +197,10 @@ class game_event_1vs1:
                 self.broadcast(("Player " + str(self.player_1.game_name) + " score is: " + str(self.player_1.score)))
                 self.broadcast("Player " + str(self.player_2.game_name) + " score is: " + str(self.player_2.score))
                 self.broadcast("-" * 20)
-                # if self.player_1.score > self.player_2.score:
-                #     return 1
-                # else:
-                #     return 2
+                if self.player_1.score > self.player_2.score:
+                     return 1
+                else:
+                    return 2
             else:
                 self.player_1.hand = self.player_draw_card(self.player_1, 1)
                 self.player_2.hand = self.player_draw_card(self.player_2, 1)

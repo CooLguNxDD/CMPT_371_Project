@@ -3,8 +3,10 @@ import threading
 import time
 
 from dataclasses import dataclass
+from turtle import position
 
-from board_server import *
+#from board_server import *
+import board_server as broad_event
 import game_event_1vs1 as game_event
 
 import json
@@ -16,14 +18,16 @@ class Player:
     address: str
     hand: list
     selected_card: list
-    score: int
+    score: int ### needed? should reset?
     game_name = ""
     is_ready = False
+    position =  0
 
 
 
 # from board import *
 class server:
+   
     def __init__(self):
 
         # multi-threading support
@@ -44,6 +48,8 @@ class server:
 
         # game instance
         self.new_game = []
+
+        self.threads = []
 
     def broadcast(self, message):
         time.sleep(0.1)
@@ -101,7 +107,8 @@ class server:
         # todo: divide the player into groups and append to game_event.game_event_1vs1
         # todo: append 2 players to new_game 
         # todo: add all new_game into thread
-        self.new_game.append(game_event.game_event_1vs1(self.players[0], self.players[1]))
+        self.new_game.append(broad_event.board_server(self.players,self.threads,self.lock))
+        #self.new_game.append(game_event.game_event_1vs1(self.players[0], self.players[1]))
         self.new_game[0].start_game()
 
         print("-" * 20)
@@ -129,10 +136,15 @@ class server:
                     player = Player(client=client, address=address, hand=[], selected_card=[], score=0)
                     self.players.append(player)
                     # start new thread for each player
-                    threading.Thread(target=self.player_startup, args=(player,)).start()
+                    thread = threading.Thread(target=self.player_startup, args=(player,))
+                    thread.start()
                     print("player count: ", len(self.players))
+                    self.threads.append(thread)
                 elif self.game_on and starting:
                     # main game event
+                 
+
+                 
                     self.Main_Game_Start()
                     starting = False
 

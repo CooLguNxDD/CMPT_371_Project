@@ -91,6 +91,14 @@ def showHand(playerHand):
     print("--------")
     print("")
 
+def roll(client):
+    try:
+        input("Press Any button to roll a die")
+        client.send(" ".encode("utf-8"))
+    except Exception as e:
+        print(e)
+
+
 
 
 def main():
@@ -121,6 +129,8 @@ def main():
 
             elif message[0] == "selectedCard":
                 play_card(message[1], client)
+            elif message[0] == "roll":
+                roll(client)
             # other message
             elif len(message[0]) != 0:
                 print(message[0])
