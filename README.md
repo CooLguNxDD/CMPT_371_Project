@@ -1,5 +1,9 @@
 # Card Jujitzu Fire for CMPT_371 Project
 
+# Socket programming:
+
+The Project is implemented in python, which used socket as TCP server-client application.
+
 # Game description:
 
 The game selected was a heavily modified version of the mini game "Card Jujitzu Fire" from the 2005 online multiplayer game Club Penguin.
