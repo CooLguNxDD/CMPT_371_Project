@@ -105,9 +105,6 @@ class server:
         self.broadcast("\nGame start!".encode("utf-8"))
         self.broadcast("\n ________________________________________________".encode("utf-8"))
 
-        # todo: divide the player into groups and append to game_event.game_event_1vs1
-        # todo: append 2 players to new_game 
-        # todo: add all new_game into thread
         self.new_game.append(broad_event.board_server(self.players, self.threads, self.lock))
         # self.new_game.append(game_event.game_event_1vs1(self.players[0], self.players[1]))
         self.new_game[0].start_game()
