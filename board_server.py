@@ -248,7 +248,9 @@ class board_server:
                 self.broadcast(f"{self.players[i].game_name} Rolled a {r1} and landed on {temp_position}".encode("utf-8"))
                 if temp_position >= board_size:
                     #print("Player", i, " Wins")
+                    print("-" * 20)
                     self.broadcast(f"{self.players[i].game_name} Wins".encode("utf-8"))
+                    print("-" * 20)
                     game_on = 0
                     break
                     # return i
