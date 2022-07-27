@@ -40,7 +40,6 @@ def msg_check_target(target, target_message, except_msg):
         except Exception as e:
             print(e)
             print(except_msg)
-
     return msg
 
 # send game name to server
@@ -71,12 +70,13 @@ def show_card(message):
 def play_card(card_limit, client):
     card_limit = int(card_limit)
     card_index = -1
-    try:
-        while 0 > card_index or card_index > card_limit:
+    while 0 > card_index or card_index > card_limit - 1:
+        try:
             card_index = int(input(f"Select a card ({0} - {card_limit - 1}): \n"))
-        client.send(str(card_index).encode())
-    except Exception as e:
-        print(e)
+        except Exception as e:
+            print(e)
+
+    client.send(str(card_index).encode())
     return
 
 # show card on hand
