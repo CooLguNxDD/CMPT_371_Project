@@ -5,7 +5,7 @@ import time
 from dataclasses import dataclass
 from turtle import position
 
-#from board_server import *
+# from board_server import *
 import board_server as broad_event
 import game_event_1vs1 as game_event
 
@@ -18,21 +18,21 @@ class Player:
     address: str
     hand: list
     selected_card: list
-    score: int ### needed? should reset?
+    score: int  ### needed? should reset?
     game_name = ""
     is_ready = False
-    position =  0
-
+    position = 0
 
 
 # from board import *
 class server:
-   
+
     def __init__(self):
 
         # multi-threading support
         self.lock = threading.Lock()
-        self.game_on = 0
+        self.game_on = False
+        self.starting = False
 
         # socket
         self.serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -94,7 +94,8 @@ class server:
             # if all players are ready
         self.lock.release()
 
-        #start game
+        # start game
+        self.starting = True
         self.game_on = True
 
     def Main_Game_Start(self):
@@ -104,30 +105,65 @@ class server:
         self.broadcast("\nGame start!".encode("utf-8"))
         self.broadcast("\n ________________________________________________".encode("utf-8"))
 
-        # todo: divide the player into groups and append to game_event.game_event_1vs1
-        # todo: append 2 players to new_game 
-        # todo: add all new_game into thread
-        self.new_game.append(broad_event.board_server(self.players,self.threads,self.lock))
-        #self.new_game.append(game_event.game_event_1vs1(self.players[0], self.players[1]))
+        self.new_game.append(broad_event.board_server(self.players, self.threads, self.lock))
+        # self.new_game.append(game_event.game_event_1vs1(self.players[0], self.players[1]))
         self.new_game[0].start_game()
 
         print("-" * 20)
         print("end game :)")
         print("-" * 20)
-        self.reset_player(self.players[0])
-        self.reset_player(self.players[1])
+        self.game_on = False
 
-    # reset player
-    def reset_player(self, player):
+        threading.Thread(target=self.restart_game).start()
+
+    def restart_game(self):
+        # restart the game
+        self.ready_count = 0
+
+        print("-" * 20)
+        self.broadcast("the game is restarting".encode("utf-8"))
+        print("the game is restarting")
+        print("-" * 20)
+
+        self.reset_player()
+        return
+
+    # reset all player
+    def reset_player(self):
+        self.broadcast("current players: ".encode("utf-8"))
+        player_info = "["
+        for player in self.players:
+            player_info += player.game_name + " "
+        player_info += "]"
+        self.broadcast(player_info.encode("utf-8"))
+
+        threads = []
+        for player in self.players:
+            threads.append(threading.Thread(target=self.reset_each_player, args=(player,)))
+
+
+
+        for t in threads:
+            t.start()
+
+        # wait until all players is being reset
+        for t in threads:
+            t.join()
+
+        return
+
+    # reset each player in thread
+    def reset_each_player(self, player):
         player.hand = []
         player.selected_card = []
         player.is_ready = False
         player.score = 0
-
+        self.player_ready(player)
+        return
 
     def start(self):
         stop = time.time() + 9999
-        starting = True
+
         while time.time() < stop:  ##run startup routine for 30 seconds
             try:
                 # not accepting new player if the game has started
@@ -140,13 +176,11 @@ class server:
                     thread.start()
                     print("player count: ", len(self.players))
                     self.threads.append(thread)
-                elif self.game_on and starting:
-                    # main game event
-                 
 
-                 
+                elif self.game_on and self.starting:
+                    # main game event
                     self.Main_Game_Start()
-                    starting = False
+                    self.starting = False
 
             except socket.timeout:
                 pass
