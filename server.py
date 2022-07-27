@@ -137,7 +137,7 @@ class server:
         player_info = "["
         for player in self.players:
             player_info += player.game_name + " "
-        player_info = "]"
+        player_info += "]"
         self.broadcast(player_info.encode("utf-8"))
 
         threads = []
