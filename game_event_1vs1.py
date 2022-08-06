@@ -48,6 +48,15 @@ class game_event_1vs1:
         cardsDrawn = []
         for x in range(numCards):
             cardsDrawn.append(self.full_deck.pop(0))
+
+            # reset deck
+            if len(self.full_deck) == 0:
+                self.full_deck = self.buildDeck()
+                random.shuffle(self.full_deck)
+
+                print("--------resetting deck--------")
+
+
         return cardsDrawn
 
     def reset_card(self):
@@ -165,10 +174,10 @@ class game_event_1vs1:
 
     def start_game(self):
         print("starting game")
-        ret = self.play_multi_card_ju()
+        ret = self.play_multi_card_ju(5)
         return ret
 
-    def play_multi_card_ju(self):
+    def play_multi_card_ju(self, win_score):
 
         time.sleep(0.5)
         # reset card to zero
@@ -191,7 +200,7 @@ class game_event_1vs1:
             time.sleep(0.5)
             self.win_condition()
 
-            if self.player_1.score >= 2 or self.player_2.score >= 2:
+            if self.player_1.score >= win_score or self.player_2.score >= win_score:
                 self.game_on = False
                 self.broadcast("-" * 20)
                 self.broadcast("Game Over.")
