@@ -26,7 +26,7 @@ Fire beat Snow, Snow beats Water, and Water beat fire.
 
 If they have the same element, the card with a higher number wins the game.
 
-The player got 2 wins first will be considered as winner and they can stay on the square
+The player get 2 wins first will be considered as winner and they can stay on the square
 
 # GUI
 
