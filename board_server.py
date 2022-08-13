@@ -240,6 +240,7 @@ class board_server:
                 
          
                 self.broadcast(f"It is now {self.players[i].game_name}'s turn to roll".encode("utf-8"))
+                time.sleep(1)
                 self.players[i].client.send("roll*".encode("utf-8"))
                 self.players[i].client.recv(1024).decode("utf-8")
                 r1 = random.randint(1, 3)
