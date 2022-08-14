@@ -36,7 +36,10 @@ class server:
 
         # socket
         self.serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.serversocket.bind(('127.0.0.1', 80))
+        self.IP = socket.gethostbyname(socket.gethostname())
+        print(self.IP)
+        
+        self.serversocket.bind((self.IP, 80))
         self.serversocket.listen(5)
         self.serversocket.settimeout(5)
 
